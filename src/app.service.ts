@@ -3,9 +3,11 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
 import { Document } from 'langchain/document';
-import { SupabaseVectorStore } from 'langchain/vectorstores';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Embeddings, OpenAIEmbeddings } from 'langchain/embeddings';
+import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { supabaseClient } from './supabaseclient';
+import { Embeddings } from 'langchain/dist/embeddings/base';
 
 @Injectable()
 export class AppService {
@@ -16,10 +18,6 @@ export class AppService {
   async createAndSaveEmbeddings(data: any) {
     const formattedText = await this.readPDF(data);
     const splittedDocs = await this.splitDocsIntoChunks(formattedText);
-    const supabaseClient = createClient(
-      process.env.SUPABASE_URL || '',
-      process.env.SUPABASE_PUBLIC_KEY || '',
-    );
     const embeddedDocs = await this.embedDocuments(
       supabaseClient,
       splittedDocs,
