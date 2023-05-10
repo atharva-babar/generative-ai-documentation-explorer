@@ -8,7 +8,6 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { TextItem } from 'pdfjs-dist/types/src/display/api';
 
 @Controller()
 export class AppController {
@@ -19,7 +18,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('text')
+  @Post('embed-data')
   @UseInterceptors(FileInterceptor('file'))
   async createAndSaveEmbeddings(@UploadedFile() file): Promise<string> {
     const data = await file.buffer;
